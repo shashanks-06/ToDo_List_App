@@ -6,6 +6,7 @@ const ToDoApp = () => {
       <h2>
         ToDo List App <img src={icon} />
       </h2>
+      
     </div>
   );
 };
