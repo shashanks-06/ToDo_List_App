@@ -4,7 +4,7 @@ const List = () => {
   return (
     <div>
       <ul className="list-container">
-        <li>Task 1</li>
+        <li className="checked">Task 1</li>
         <li>Task 2</li>
         <li>Task 3</li>
       </ul>
