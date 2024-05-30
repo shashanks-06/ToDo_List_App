@@ -1,3 +1,4 @@
+import List from "./List";
 import icon from "/icon.png";
 
 const ToDoApp = () => {
@@ -10,6 +11,7 @@ const ToDoApp = () => {
         <input type="text" id="input-box" placeholder="Add your Text" />
         <button>Add</button>
       </div>
+      <List />
     </div>
   );
 };
