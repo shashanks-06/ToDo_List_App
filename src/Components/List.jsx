@@ -1,14 +1,18 @@
 import React from "react";
 
-const List = () => {
+const List = ({ task, deleteTask, toggleCompleted }) => {
+  const handleChange = () => {
+    toggleCompleted(task.id);
+  };
   return (
-    <div>
-      <ul className="list-container">
-        <li className="checked">Task 1</li>
-        <li>Task 2</li>
-        <li>Task 3</li>
-      </ul>
-    </div>
+    <li
+      className={toggleCompleted ? "checked" : ""}
+      onChange={handleChange}
+      onClick={task.completed}
+    >
+      {task.text}
+      <span onClick={() => deleteTask(task.id)}>x</span>
+    </li>
   );
 };
 
