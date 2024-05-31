@@ -81,11 +81,20 @@ const ToDoApp = () => {
     localStorage.removeItem(LOCAL_STORAGE_KEY);
   };
 
+  const countCompletedTask = () => {
+    return tasks.filter((task) => task.completed).length;
+  };
+
   return (
     <div className="todo-app">
-      <h2>
-        ToDo List App <img src={icon} />
-      </h2>
+      <div className="header">
+        <h2>
+          ToDo List App <img src={icon} />
+        </h2>
+        <div className="tracker">
+          {countCompletedTask()}/{tasks.length}
+        </div>
+      </div>
       <div className="row">
         <input
           type="text"
