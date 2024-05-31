@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import List from "./List";
 import icon from "/icon.png";
+import { Bounce, Flip, Slide, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ToDoApp = () => {
   const [tasks, setTasks] = useState([]);
@@ -28,7 +30,7 @@ const ToDoApp = () => {
 
   const addTask = (text) => {
     if (text === "") {
-      alert("You Must Write Something!");
+      toast.error("You Must Type Something");
     } else {
       const newTask = {
         id: Date.now(),
@@ -36,6 +38,7 @@ const ToDoApp = () => {
         completed: false,
       };
       setTasks([...tasks, newTask]);
+      toast.success(`${text} Created Successfully`);
 
       localStorage.setItem(
         LOCAL_STORAGE_KEY,
@@ -47,23 +50,33 @@ const ToDoApp = () => {
   };
 
   const deleteTask = (id) => {
-    const deleted = tasks.filter((task) => task.id !== id);
-    setTasks(deleted);
+    const deletedTask = tasks.find((task) => task.id === id);
 
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(deleted));
+    if (deletedTask) {
+      const deleted = tasks.filter((task) => task.id !== id);
+      setTasks(deleted);
+
+      toast.success(`${deletedTask.text}  Deleted Successfully`);
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(deleted));
+    }
   };
 
   const toggleCompleted = (id) => {
+    const toggledTask = tasks.find((task) => task.id === id);
+
     const toggled = tasks.map((task) =>
       task.id === id ? { ...task, completed: !task.completed } : task
     );
     setTasks(toggled);
+
+    toast.success(`${toggledTask.text} Toggled Successfully`);
 
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(toggled));
   };
 
   const deleteAll = () => {
     setTasks([]);
+    toast.success("All Tasks Deleted Successfully");
 
     localStorage.removeItem(LOCAL_STORAGE_KEY);
   };
@@ -95,9 +108,12 @@ const ToDoApp = () => {
           />
         ))}
       </ul>
-      <button className="deleteAllBtn" onClick={deleteAll}>
-        DeleteAll
-      </button>
+      {tasks.length !== 0 && (
+        <button className="deleteAllBtn" onClick={deleteAll}>
+          DeleteAll
+        </button>
+      )}
+      <ToastContainer />
     </div>
   );
 };
