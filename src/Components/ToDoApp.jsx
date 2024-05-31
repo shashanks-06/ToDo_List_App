@@ -3,8 +3,9 @@ import List from "./List";
 import icon from "/icon.png";
 
 const ToDoApp = () => {
-  const [tasks, setTasks] = useState([
-    {
+  const [tasks, setTasks] = useState([]);
+
+  /*{
       id: 1,
       text: "Learn JavaScript",
       completed: true,
@@ -13,14 +14,17 @@ const ToDoApp = () => {
       id: 2,
       text: "Do DSA",
       completed: false,
-    },
-  ]);
+    },*/
 
   const [text, setText] = useState("");
 
+  const LOCAL_STORAGE_KEY = "myTodos";
+
   useEffect(() => {
-    window.localStorage.setItem("toDos", JSON.stringify(tasks));
-  }, [tasks]);
+    const storedTasks = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
+
+    if (storedTasks) setTasks(storedTasks);
+  }, []);
 
   const addTask = (text) => {
     if (text === "") {
@@ -32,38 +36,37 @@ const ToDoApp = () => {
         completed: false,
       };
       setTasks([...tasks, newTask]);
-      let myTask = tasks.push(newTask);
-      window.localStorage.setItem("myTask", JSON.stringify(myTask));
-      console.log(JSON.stringify(myTask));
+
+      localStorage.setItem(
+        LOCAL_STORAGE_KEY,
+        JSON.stringify([...tasks, newTask])
+      );
+
+      setText("");
     }
-    setText("");
   };
 
   const deleteTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id));
+    const deleted = tasks.filter((task) => task.id !== id);
+    setTasks(deleted);
+
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(deleted));
   };
 
   const toggleCompleted = (id) => {
-    setTasks(
-      tasks.map((task) => {
-        if (task.id === id) {
-          return { ...task, completed: !task.completed };
-        } else {
-          return task;
-        }
-      })
+    const toggled = tasks.map((task) =>
+      task.id === id ? { ...task, completed: !task.completed } : task
     );
+    setTasks(toggled);
+
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(toggled));
   };
 
   const deleteAll = () => {
     setTasks([]);
-  };
 
-  useEffect(() => {
-    let localTasks = JSON.parse(window.localStorage.getItem("toDos"));
-    setTasks(localTasks);
-    console.log(localTasks);
-  }, []);
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+  };
 
   return (
     <div className="todo-app">
@@ -78,7 +81,9 @@ const ToDoApp = () => {
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        <button className="addbtn" onClick={() => addTask(text)}>Add</button>
+        <button className="addbtn" onClick={() => addTask(text)}>
+          Add
+        </button>
       </div>
       <ul className="list-container">
         {tasks.map((task) => (
@@ -90,7 +95,9 @@ const ToDoApp = () => {
           />
         ))}
       </ul>
-      <button className="deleteAllBtn" onClick={deleteAll}>DeleteAll</button>
+      <button className="deleteAllBtn" onClick={deleteAll}>
+        DeleteAll
+      </button>
     </div>
   );
 };
