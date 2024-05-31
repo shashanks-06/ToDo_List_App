@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import List from "./List";
 import icon from "/icon.png";
 
@@ -18,6 +18,10 @@ const ToDoApp = () => {
 
   const [text, setText] = useState("");
 
+  useEffect(() => {
+    window.localStorage.setItem("toDos", JSON.stringify(tasks));
+  }, [tasks]);
+
   const addTask = (text) => {
     if (text === "") {
       alert("You Must Write Something!");
@@ -28,6 +32,9 @@ const ToDoApp = () => {
         completed: false,
       };
       setTasks([...tasks, newTask]);
+      let myTask = tasks.push(newTask);
+      window.localStorage.setItem("myTask", JSON.stringify(myTask));
+      console.log(JSON.stringify(myTask));
     }
     setText("");
   };
@@ -48,6 +55,16 @@ const ToDoApp = () => {
     );
   };
 
+  const deleteAll = () => {
+    setTasks([]);
+  };
+
+  useEffect(() => {
+    let localTasks = JSON.parse(window.localStorage.getItem("toDos"));
+    setTasks(localTasks);
+    console.log(localTasks);
+  }, []);
+
   return (
     <div className="todo-app">
       <h2>
@@ -61,7 +78,7 @@ const ToDoApp = () => {
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        <button onClick={() => addTask(text)}>Add</button>
+        <button className="addbtn" onClick={() => addTask(text)}>Add</button>
       </div>
       <ul className="list-container">
         {tasks.map((task) => (
@@ -73,6 +90,7 @@ const ToDoApp = () => {
           />
         ))}
       </ul>
+      <button className="deleteAllBtn" onClick={deleteAll}>DeleteAll</button>
     </div>
   );
 };
