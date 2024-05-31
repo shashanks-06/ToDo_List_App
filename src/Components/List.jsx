@@ -5,14 +5,17 @@ const List = ({ task, deleteTask, toggleCompleted }) => {
     toggleCompleted(task.id);
   };
   return (
-    <li
-      className={toggleCompleted ? "checked" : ""}
-      onChange={handleChange}
-      onClick={task.completed}
-    >
-      {task.text}
-      <span onClick={() => deleteTask(task.id)}>x</span>
-    </li>
+    <div className="list">
+      <li
+        className={task.completed ? "checked" : ""}
+        onClick={() => handleChange()}
+      >
+        {task.text}
+      </li>
+      <span className="deleteBtn" onClick={() => deleteTask(task.id)}>
+        x
+      </span>
+    </div>
   );
 };
 
